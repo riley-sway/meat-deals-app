@@ -68,9 +68,9 @@ app.post('/api/search', async (req, res) => {
 
     const searchResponse = await withRateLimitRetry(() =>
       client.messages.create({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-haiku-4-5',
         max_tokens: 3000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 } as const],
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 } as const],
         messages: [{ role: 'user', content: searchPrompt }],
       })
     );
