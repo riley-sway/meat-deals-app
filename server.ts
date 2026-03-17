@@ -106,25 +106,32 @@ app.post('/api/search', async (req, res) => {
   ]
 }`;
 
+    // Only pass the text summary to the format step — strip raw search result
+    // blocks (tool_use / tool_result) which are very large and not needed.
+    const searchSummary = searchResponse.content
+      .filter((b) => b.type === 'text')
+      .map((b) => b.type === 'text' ? b.text : '')
+      .join('\n');
+
     const formatMessages: Anthropic.MessageParam[] = [
-      { role: 'user', content: searchPrompt },
-      { role: 'assistant', content: searchResponse.content },
       {
         role: 'user',
         content:
-          `Now convert ALL the meat deals you found above into this exact JSON structure. ` +
-          `Include every deal you mentioned — do not omit any. ` +
+          `Here are this week's meat deals found at grocery stores near ${location}:\n\n` +
+          searchSummary +
+          `\n\nConvert ALL of these deals into this exact JSON structure. ` +
+          `Include every deal mentioned — do not omit any. ` +
           `Output ONLY the raw JSON — no markdown fences, no explanation, nothing else:\n\n` +
           jsonSchema +
           `\n\nUse null for any unknown fields. ` +
-          `Only return an empty deals array if you truly found zero meat deals anywhere.`,
+          `Only return an empty deals array if there are truly zero meat deals.`,
       },
     ];
 
     const formatResponse = await withRateLimitRetry(() =>
       client.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 8192,
+        model: 'claude-haiku-4-5',
+        max_tokens: 4096,
         messages: formatMessages,
       })
     );
