@@ -2,25 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import type { Deal } from './types';
 
-// Fix default marker icons once at module level
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
+function makePinIcon(color: string) {
+  return L.divIcon({
+    className: '',
+    html: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36">
+      <path fill="${color}" stroke="#fff" stroke-width="1.5"
+        d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z"/>
+      <circle fill="#fff" cx="12" cy="12" r="4.5"/>
+    </svg>`,
+    iconSize:    [24, 36],
+    iconAnchor:  [12, 36],
+    popupAnchor: [0, -36],
+  });
+}
 
-const userIcon = new L.Icon({
-  iconUrl:     'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-  shadowUrl:   'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize:    [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41],
-});
-
-const dealIcon = new L.Icon({
-  iconUrl:     'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-  shadowUrl:   'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize:    [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41],
-});
+const userIcon = makePinIcon('#c62828');
+const dealIcon = makePinIcon('#2e7d32');
 
 interface GroceryStore {
   id: number;
@@ -215,11 +212,18 @@ export default function MapView({ location, radius, coords, deals = [] }: Props)
     );
   }
 
+  const dealStoreCount = stores.filter((store) =>
+    deals.some((d) =>
+      d.store.toLowerCase().includes(store.name.toLowerCase()) ||
+      store.name.toLowerCase().includes(d.store.toLowerCase())
+    )
+  ).length;
+
   return (
     <div className="map-wrapper">
       <div className="map-header">
         <span className="map-title">🗺️ Stores near {location}</span>
-        <span className="map-store-count">{stores.length} store{stores.length !== 1 ? 's' : ''} with deals mapped</span>
+        <span className="map-store-count">{dealStoreCount} store{dealStoreCount !== 1 ? 's' : ''} with deals mapped</span>
       </div>
       <div ref={mapDivRef} style={{ height: 380, width: '100%', borderRadius: '0 0 12px 12px' }} />
     </div>
