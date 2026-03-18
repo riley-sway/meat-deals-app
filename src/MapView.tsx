@@ -193,7 +193,7 @@ export default function MapView({ location, radius, coords, deals = [] }: Props)
       map.remove();
       mapInstanceRef.current = null;
     };
-  }, [status, center, stores, radius, location]);
+  }, [status, center, stores, radius, location, deals]);
 
   if (status === 'loading') {
     return (
