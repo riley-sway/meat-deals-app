@@ -164,8 +164,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1>🥩 Meat Deals Finder</h1>
-          <p>Find the best current meat deals at grocery stores near you</p>
+          <img src="/meat-deals-logo.png" alt="Meat Deals Finder" className="header-logo" />
         </div>
       </header>
 

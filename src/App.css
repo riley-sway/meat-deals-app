@@ -20,11 +20,16 @@ body {
 
 /* ── Header ── */
 .app-header {
-  background: linear-gradient(135deg, #b71c1c 0%, #c62828 60%, #d32f2f 100%);
-  color: white;
-  padding: 2rem 1rem;
+  background: white;
+  padding: 1rem 1.5rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header-logo {
+  height: 52px;
+  width: auto;
 }
 
 .header-content h1 {
