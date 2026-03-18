@@ -164,7 +164,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <img src="/meat-deals-logo.png" alt="Meat Deals Finder" className="header-logo" />
+          <img src="/meat-deals-logo-white.png" alt="Meat Deals Finder" className="header-logo" />
         </div>
       </header>
 
